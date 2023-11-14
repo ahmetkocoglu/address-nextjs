@@ -1,14 +1,26 @@
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
+import { getCountry } from "@/store/apps/country";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Index = () => {
-  const data: any = useSelector((state: RootState) => state.country.data);
+  // ** Redux
+  const dispatch = useDispatch<AppDispatch>();
+
+   // ** Selector
+   const loading: boolean = useSelector(
+    (state: RootState) => state.country.loading
+  );
+  const data: any[] = useSelector((state: RootState) => state.country.data);
   const router: any = useRouter();
 
   const [cityId, setCityId] = useState<number>(0);
+
+  useEffect(() => {
+    if (data.length === 0) dispatch(getCountry());
+  }, [data.length, dispatch]);
 
   useEffect(() => {
     setCityId(parseInt(router.query.id));
@@ -18,10 +30,10 @@ const Index = () => {
     <>
     <h1>Şehir</h1>
       {cityId}
-      {data[0].city.find((k: any) => k.id === cityId)?.name}
+      {data.length > 0 && data[0].city.find((k: any) => k.id === cityId)?.name}
       <hr />
       <div className="flex flex-wrap mt-3">
-        {data[0].city
+        {data.length > 0 && data[0].city
           .find((k: any) => k.id === cityId)
           ?.district?.map((k: any, index: number) => {
             return (

@@ -23,7 +23,7 @@ const District = (props: Props) => {
 
   useEffect(() => {
     if (data.length === 0) dispatch(getCountry());
-  }, [dispatch]);
+  }, [data.length, dispatch]);
 
   useEffect(() => {
     setCityId(parseInt(router.query.id[0]));
