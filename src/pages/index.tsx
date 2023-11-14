@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { useEffect } from "react";
 import { getCountry } from "@/store/apps/country";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,7 @@ export default function Home() {
         <>
           <h1>Hello, Next.js!</h1>
           <div>{data.length > 0 && data[0].city.map((k: any) => {
-            return <><div>{k.name}</div></>
+            return <><div><Link href='/city'>{k.name}</Link></div></>
           })}</div>
         </>
       )}
