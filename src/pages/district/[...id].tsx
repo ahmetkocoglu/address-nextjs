@@ -38,11 +38,22 @@ const District = (props: Props) => {
       <hr />
       <div className="flex flex-wrap mt-3">
         {data[0]?.city
-          .find((k: any) => k.id === districtId)
+          .find((k: any) => k.id === cityId)
           ?.district?.map((k: any, index: number) => {
             return (
               <div className="border px-1 rounded-full" key={index}>
-                <Link href={`/district/${k.id}`}>{k.name}</Link>
+                <Link href={`/district/${cityId}/${k.id}`}>{k.name}</Link>
+              </div>
+            );
+          })}
+      </div>
+      <hr />
+      <div className="flex flex-wrap mt-3">
+        {data[0]?.city
+          .find((k: any) => k.id === cityId)?.district?.find((k: any) => k.id === districtId)?.town?.map((k: any, index: number) => {
+            return (
+              <div className="border px-1 rounded-full" key={index}>
+                {k.name}
               </div>
             );
           })}
