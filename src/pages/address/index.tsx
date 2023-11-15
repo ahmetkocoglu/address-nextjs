@@ -1,6 +1,46 @@
-import React from "react";
+import React from "react"
+import * as yup from 'yup'
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+enum addressType { JOB = 'iş', HOME = 'ev' };
+
+type FormValues = {
+    addressType?: addressType;
+    addressLine: string;
+    street?: string;
+    post_code?: string;
+    location?: string;
+    userId?: number;
+    countryId?: number;
+    cityId?: number;
+    districtId?: number;
+    townId?: number;
+}
+
+const addressFormSchema = yup.object().shape({
+    addressLine: yup.string().required('Lütfen adress satırını giriniz')
+}) 
+
+const defaultValues: FormValues = {
+    addressType: addressType.HOME,
+    addressLine: "",
+    street: "",
+    post_code: "",
+    location: "",
+    userId: 0,
+    countryId: 0,
+    cityId: 0,
+    districtId: 0,
+    townId: 0
+}
 
 const Address = () => {
+const {register,handleSubmit,formState: {errors}} = useForm<FormValues>({
+    defaultValues,
+    resolver: yupResolver(addressFormSchema)
+})
+
   return (
     <>
       <div className="max-w-2xl mx-auto">
