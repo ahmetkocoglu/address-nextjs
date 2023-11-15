@@ -40,9 +40,6 @@ const defaultValues: FormValues = {
 };
 
 const Address = () => {
-  const [name, setName] = useState("");
-  const [error, setError] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -51,10 +48,6 @@ const Address = () => {
     defaultValues,
     resolver: yupResolver(addressFormSchema),
   });
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
 
   const onSubmit = ({addressLine}: FormValues) => {
     console.log(addressLine);
