@@ -56,6 +56,10 @@ const Address = () => {
     setName(e.target.value);
   };
 
+  const onSubmit = ({addressLine}: FormValues) => {
+    console.log(addressLine);
+  };
+
   return (
     <>
       <div className="max-w-2xl mx-auto">
@@ -65,62 +69,64 @@ const Address = () => {
         >
           Adres Girişi
         </h1>
-        <div className="flex flex-wrap -mx-4 py-28 gap-y-2">
-          <div className="w-full md:w-1/2 px-1">
-            <select className="w-full">
-              <option selected>Adres Tipi Seçiniz</option>
-              <option>iş</option>
-              <option>ev</option>
-            </select>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-wrap -mx-4 py-28 gap-y-2">
+            <div className="w-full md:w-1/2 px-1">
+              <select className="w-full">
+                <option selected>Adres Tipi Seçiniz</option>
+                <option>iş</option>
+                <option>ev</option>
+              </select>
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <Input
+                type="text"
+                placeholder="Adres satırı"
+                className="mt-1"
+                rounded="rounded-2xl"
+                {...register("addressLine", { required: true })}
+              />
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <input type="text" className="w-full" placeholder="Sokak" />
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <input type="text" className="w-full" placeholder="Posta Kodu" />
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <input type="text" className="w-full" placeholder="Konum" />
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <select className="w-full">
+                <option>Kişi Seçiniz</option>
+              </select>
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              {" "}
+              <select className="w-full">
+                <option>Ülke Seçiniz</option>
+              </select>
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <select className="w-full">
+                <option>Şehir Seçiniz</option>
+              </select>
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <select className="w-full">
+                <option>İlçe Seçiniz</option>
+              </select>
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <select className="w-full">
+                <option>Mahalle Seçiniz</option>
+              </select>
+            </div>
           </div>
-          <div className="w-full md:w-1/2 px-1">
-            <Input
-              type="text"
-              label="Name"
-              value={name}
-              name="name"
-              error={error}
-              onChange={handleNameChange}
-              placeholder="Please enter your name"
-            />
-            <input type="text" className="w-full" placeholder="Adress Satırı" />
+          <div className="text-center">
+            <button type="submit">Gönder</button>
           </div>
-          <div className="w-full md:w-1/2 px-1">
-            <input type="text" className="w-full" placeholder="Sokak" />
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            <input type="text" className="w-full" placeholder="Posta Kodu" />
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            <input type="text" className="w-full" placeholder="Konum" />
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            <select className="w-full">
-              <option>Kişi Seçiniz</option>
-            </select>
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            {" "}
-            <select className="w-full">
-              <option>Ülke Seçiniz</option>
-            </select>
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            <select className="w-full">
-              <option>Şehir Seçiniz</option>
-            </select>
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            <select className="w-full">
-              <option>İlçe Seçiniz</option>
-            </select>
-          </div>
-          <div className="w-full md:w-1/2 px-1">
-            <select className="w-full">
-              <option>Mahalle Seçiniz</option>
-            </select>
-          </div>
-        </div>
+        </form>
       </div>
     </>
   );

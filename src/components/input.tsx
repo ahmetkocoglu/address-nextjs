@@ -1,42 +1,35 @@
-import { ChangeEvent, FC } from 'react'
+import React, { InputHTMLAttributes } from "react";
 
-interface InputProps {
-  type: 'text' | 'number' | 'email' | 'password'
-  label: string
-  value: string | number
-  name: string
-  placeholder: string
-  error: boolean
-  disabled?: boolean
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  sizeClass?: string;
+  fontClass?: string;
+  rounded?: string;
+  register?: any;
 }
 
-const Input: FC<InputProps> = ({
-  type,
-  label,
-  value,
-  name,
-  placeholder,
-  error,
-  disabled,
-  onChange,
-}) => {
-  return (
-    <div className="input-wrapper">
-      <label htmlFor={label}>{label}</label>
+// eslint-disable-next-line react/display-name
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      className = "",
+      sizeClass = "h-11 px-4 py-3",
+      fontClass = "text-sm font-normal",
+      rounded = "rounded-full",
+      children,
+      type = "text",
+      ...args
+    },
+    ref
+  ) => {
+    return (
       <input
+        ref={ref}
         type={type}
-        id={label}
-        value={value}
-        name={name}
-        placeholder={placeholder}
-        onChange={onChange}
-        disabled={disabled}
-        className='text-black'
+        className={`block w-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200/50 bg-white dark:border-neutral-500 dark:focus:ring-primary-500/30 dark:bg-neutral-900 ${rounded} ${fontClass} ${sizeClass} ${className}`}
+        {...args}
       />
-      {error && <p className="error">Giriş dosyası boş olamaz!</p>}
-    </div>
-  )
-}
+    );
+  }
+);
 
-export default Input
+export default Input;
