@@ -32,6 +32,7 @@ const Input: FC<InputProps> = ({
         placeholder={placeholder}
         onChange={onChange}
         disabled={disabled}
+        className='text-black'
       />
       {error && <p className="error">Giriş dosyası boş olamaz!</p>}
     </div>

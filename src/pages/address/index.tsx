@@ -1,45 +1,60 @@
-import React from "react"
-import * as yup from 'yup'
+import React, { ChangeEvent, useState } from "react";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Input from "@/components/input";
 
-enum addressType { JOB = 'iş', HOME = 'ev' };
+enum addressType {
+  JOB = "iş",
+  HOME = "ev",
+}
 
 type FormValues = {
-    addressType?: addressType;
-    addressLine: string;
-    street?: string;
-    post_code?: string;
-    location?: string;
-    userId?: number;
-    countryId?: number;
-    cityId?: number;
-    districtId?: number;
-    townId?: number;
-}
+  addressType?: addressType;
+  addressLine: string;
+  street?: string;
+  post_code?: string;
+  location?: string;
+  userId?: number;
+  countryId?: number;
+  cityId?: number;
+  districtId?: number;
+  townId?: number;
+};
 
 const addressFormSchema = yup.object().shape({
-    addressLine: yup.string().required('Lütfen adress satırını giriniz')
-}) 
+  addressLine: yup.string().required("Lütfen adress satırını giriniz"),
+});
 
 const defaultValues: FormValues = {
-    addressType: addressType.HOME,
-    addressLine: "",
-    street: "",
-    post_code: "",
-    location: "",
-    userId: 0,
-    countryId: 0,
-    cityId: 0,
-    districtId: 0,
-    townId: 0
-}
+  addressType: addressType.HOME,
+  addressLine: "",
+  street: "",
+  post_code: "",
+  location: "",
+  userId: 0,
+  countryId: 0,
+  cityId: 0,
+  districtId: 0,
+  townId: 0,
+};
 
 const Address = () => {
-const {register,handleSubmit,formState: {errors}} = useForm<FormValues>({
+  const [name, setName] = useState("");
+  const [error, setError] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues,
-    resolver: yupResolver(addressFormSchema)
-})
+    resolver: yupResolver(addressFormSchema),
+  });
+
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
 
   return (
     <>
@@ -59,6 +74,15 @@ const {register,handleSubmit,formState: {errors}} = useForm<FormValues>({
             </select>
           </div>
           <div className="w-full md:w-1/2 px-1">
+            <Input
+              type="text"
+              label="Name"
+              value={name}
+              name="name"
+              error={error}
+              onChange={handleNameChange}
+              placeholder="Please enter your name"
+            />
             <input type="text" className="w-full" placeholder="Adress Satırı" />
           </div>
           <div className="w-full md:w-1/2 px-1">
