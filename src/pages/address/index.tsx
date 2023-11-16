@@ -4,6 +4,9 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "@/components/input";
 import Select from "@/components/select";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { getCountry } from "@/store/apps/country";
 
 enum addressType {
   JOB = "iş",
@@ -45,6 +48,21 @@ const defaultValues: FormValues = {
 };
 
 const Address = () => {
+  // ** Redux
+  const dispatch = useDispatch<AppDispatch>();
+
+  // ** Selector
+  const loading: boolean = useSelector(
+    (state: RootState) => state.country.loading
+  );
+  const data: any = useSelector((state: RootState) => state.country.data);
+
+  const [city, setCity] = useState<any[]>()
+
+  useEffect(() => {
+    dispatch(getCountry());
+  }, [dispatch]);
+
   const {
     register,
     control,
@@ -138,7 +156,34 @@ const Address = () => {
             <div className="w-full md:w-1/2 px-1">
             <Controller
                 control={control}
-                name="addressType"
+                name="countryId"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                        const countryId: number = parseInt(event.target.value)
+                        const country = data.find((k: any) => k.id === countryId)
+                        setCity(country?.city ?? [])
+                        onChange(event)
+                      }}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Ülke Seçiniz</option>
+                      {data.map((k: any) => {
+                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      })}
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.countryId && <>{errors.countryId.message}</>}
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+            <Controller
+                control={control}
+                name="cityId"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <>
                     <Select
@@ -147,9 +192,29 @@ const Address = () => {
                       onBlur={onBlur}
                       value={value}
                     >
-                      <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>{addressType.HOME}</option>
-                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                      <option value="">Şehir Seçiniz</option>
+                      {city?.map((k:any)=> {
+                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      })}
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.cityId && <>{errors.cityId.message}</>}
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+            <Controller
+                control={control}
+                name="districtId"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">İlçe Seçiniz</option>
                     </Select>
                   </>
                 )}
@@ -159,7 +224,7 @@ const Address = () => {
             <div className="w-full md:w-1/2 px-1">
             <Controller
                 control={control}
-                name="addressType"
+                name="townId"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <>
                     <Select
@@ -168,51 +233,7 @@ const Address = () => {
                       onBlur={onBlur}
                       value={value}
                     >
-                      <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>{addressType.HOME}</option>
-                      <option value={addressType.JOB}>{addressType.JOB}</option>
-                    </Select>
-                  </>
-                )}
-              />
-              {errors.addressType && <>{errors.addressType.message}</>}
-            </div>
-            <div className="w-full md:w-1/2 px-1">
-            <Controller
-                control={control}
-                name="addressType"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <>
-                    <Select
-                      className="mt-1"
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    >
-                      <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>{addressType.HOME}</option>
-                      <option value={addressType.JOB}>{addressType.JOB}</option>
-                    </Select>
-                  </>
-                )}
-              />
-              {errors.addressType && <>{errors.addressType.message}</>}
-            </div>
-            <div className="w-full md:w-1/2 px-1">
-            <Controller
-                control={control}
-                name="addressType"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <>
-                    <Select
-                      className="mt-1"
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    >
-                      <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>{addressType.HOME}</option>
-                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                      <option value="">Mahalle Seçiniz</option>
                     </Select>
                   </>
                 )}
