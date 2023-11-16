@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "@/components/input";
+import Select from "@/components/select";
 
 enum addressType {
   JOB = "iş",
@@ -42,6 +43,7 @@ const defaultValues: FormValues = {
 const Address = () => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
@@ -49,8 +51,8 @@ const Address = () => {
     resolver: yupResolver(addressFormSchema),
   });
 
-  const onSubmit = ({addressLine}: FormValues) => {
-    console.log(addressLine);
+  const onSubmit = ({ addressType, addressLine }: FormValues) => {
+    console.log(addressType, addressLine);
   };
 
   return (
@@ -65,11 +67,10 @@ const Address = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-wrap -mx-4 py-28 gap-y-2">
             <div className="w-full md:w-1/2 px-1">
-              <select className="w-full">
-                <option selected>Adres Tipi Seçiniz</option>
-                <option>iş</option>
-                <option>ev</option>
-              </select>
+              <Select className="mt-1" onChange={(e: any) => console.log(e.target.value)}>
+                <option>{addressType.HOME}</option>
+                <option>{addressType.JOB}</option>
+              </Select>
             </div>
             <div className="w-full md:w-1/2 px-1">
               <Input
@@ -81,13 +82,31 @@ const Address = () => {
               />
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <input type="text" className="w-full" placeholder="Sokak" />
+              <Input
+                type="text"
+                placeholder="Sokak bilgisi"
+                className="mt-1"
+                rounded="rounded-2xl"
+                {...register("street", { required: true })}
+              />
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <input type="text" className="w-full" placeholder="Posta Kodu" />
+              <Input
+                type="text"
+                placeholder="Posta kodu"
+                className="mt-1"
+                rounded="rounded-2xl"
+                {...register("post_code", { required: true })}
+              />
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <input type="text" className="w-full" placeholder="Konum" />
+              <Input
+                type="text"
+                placeholder="Konum bilgisi"
+                className="mt-1"
+                rounded="rounded-2xl"
+                {...register("location", { required: true })}
+              />
             </div>
             <div className="w-full md:w-1/2 px-1">
               <select className="w-full">
