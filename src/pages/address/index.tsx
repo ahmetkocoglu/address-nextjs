@@ -58,6 +58,8 @@ const Address = () => {
   const data: any = useSelector((state: RootState) => state.country.data);
 
   const [city, setCity] = useState<any[]>()
+  const [district, setDistrict] = useState<any[]>()
+  const [town, setTown] = useState<any[]>()
 
   useEffect(() => {
     dispatch(getCountry());
@@ -188,7 +190,12 @@ const Address = () => {
                   <>
                     <Select
                       className="mt-1"
-                      onChange={onChange}
+                      onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                        const cityId: number = parseInt(event.target.value)
+                        const selectedCity = city?.find((k: any) => k.id === cityId)
+                        setDistrict(selectedCity?.district ?? [])
+                        onChange(event)
+                      }}
                       onBlur={onBlur}
                       value={value}
                     >
@@ -210,11 +217,19 @@ const Address = () => {
                   <>
                     <Select
                       className="mt-1"
-                      onChange={onChange}
+                      onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                        const districtId: number = parseInt(event.target.value)
+                        const selectedDistrict = district?.find((k: any) => k.id === districtId)
+                        setTown(selectedDistrict?.town ?? [])
+                        onChange(event)
+                      }}
                       onBlur={onBlur}
                       value={value}
                     >
                       <option value="">İlçe Seçiniz</option>
+                      {district?.map((k:any)=> {
+                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      })}
                     </Select>
                   </>
                 )}
@@ -234,6 +249,9 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Mahalle Seçiniz</option>
+                      {town?.map((k:any)=> {
+                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      })}
                     </Select>
                   </>
                 )}
