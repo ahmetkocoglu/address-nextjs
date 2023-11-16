@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "@/components/input";
 import Select from "@/components/select";
@@ -11,11 +11,11 @@ enum addressType {
 }
 
 type FormValues = {
-  addressType?: addressType;
+  addressType: addressType;
   addressLine: string;
-  street?: string;
-  post_code?: string;
-  location?: string;
+  street: string;
+  post_code: string;
+  location: string;
   userId?: number;
   countryId?: number;
   cityId?: number;
@@ -25,6 +25,9 @@ type FormValues = {
 
 const addressFormSchema = yup.object().shape({
   addressLine: yup.string().required("Lütfen adress satırını giriniz"),
+  street: yup.string().required("Lütfen street satırını giriniz"),
+  post_code: yup.string().required("Lütfen posta kodu satırını giriniz"),
+  location: yup.string().required("Lütfen konum satırını giriniz"),
 });
 
 const defaultValues: FormValues = {
@@ -55,6 +58,10 @@ const Address = () => {
     console.log(addressType, addressLine);
   };
 
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+
   return (
     <>
       <div className="max-w-2xl mx-auto">
@@ -67,10 +74,26 @@ const Address = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-wrap -mx-4 py-28 gap-y-2">
             <div className="w-full md:w-1/2 px-1">
-              <Select className="mt-1" onChange={(e: any) => console.log(e.target.value)}>
-                <option>{addressType.HOME}</option>
-                <option>{addressType.JOB}</option>
-              </Select>
+              <Controller
+                control={control}
+                name="addressType"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Adres Tipi</option>
+                      <option value={addressType.HOME}>
+                        {addressType.HOME}
+                      </option>
+                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                    </Select>
+                  </>
+                )}
+              />
             </div>
             <div className="w-full md:w-1/2 px-1">
               <Input
@@ -80,6 +103,7 @@ const Address = () => {
                 rounded="rounded-2xl"
                 {...register("addressLine", { required: true })}
               />
+              {errors.addressLine && <>{errors.addressLine.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
               <Input
@@ -89,6 +113,7 @@ const Address = () => {
                 rounded="rounded-2xl"
                 {...register("street", { required: true })}
               />
+              {errors.street && <>{errors.street.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
               <Input
@@ -98,6 +123,7 @@ const Address = () => {
                 rounded="rounded-2xl"
                 {...register("post_code", { required: true })}
               />
+              {errors.post_code && <>{errors.post_code.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
               <Input
@@ -107,6 +133,7 @@ const Address = () => {
                 rounded="rounded-2xl"
                 {...register("location", { required: true })}
               />
+              {errors.location && <>{errors.location.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
               <select className="w-full">

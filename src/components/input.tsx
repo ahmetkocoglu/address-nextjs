@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes, useEffect, useState } from "react";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   sizeClass?: string;
