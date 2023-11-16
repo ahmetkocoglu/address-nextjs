@@ -19,11 +19,11 @@ type FormValues = {
   street: string;
   post_code: string;
   location: string;
-  userId?: number;
-  countryId?: number;
-  cityId?: number;
-  districtId?: number;
-  townId?: number;
+  userId: number;
+  countryId: number;
+  cityId: number;
+  districtId: number;
+  townId: number;
 };
 
 const addressFormSchema = yup.object().shape({
@@ -32,6 +32,10 @@ const addressFormSchema = yup.object().shape({
   street: yup.string().required("Lütfen street satırını giriniz"),
   post_code: yup.string().required("Lütfen posta kodu satırını giriniz"),
   location: yup.string().required("Lütfen konum satırını giriniz"),
+  countryId: yup.object().shape({
+    value: yup.string().required("Required"),
+    label: yup.number().required("Required"),
+  }),
 });
 
 const defaultValues: FormValues = {
@@ -57,9 +61,9 @@ const Address = () => {
   );
   const data: any = useSelector((state: RootState) => state.country.data);
 
-  const [city, setCity] = useState<any[]>()
-  const [district, setDistrict] = useState<any[]>()
-  const [town, setTown] = useState<any[]>()
+  const [city, setCity] = useState<any[]>();
+  const [district, setDistrict] = useState<any[]>();
+  const [town, setTown] = useState<any[]>();
 
   useEffect(() => {
     dispatch(getCountry());
@@ -107,7 +111,9 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>{addressType.HOME}</option>
+                      <option value={addressType.HOME}>
+                        {addressType.HOME}
+                      </option>
                       <option value={addressType.JOB}>{addressType.JOB}</option>
                     </Select>
                   </>
@@ -156,7 +162,26 @@ const Address = () => {
               {errors.location && <>{errors.location.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-            <Controller
+              <Controller
+                control={control}
+                name="userId"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Kişi Seçiniz</option>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.userId && <>{errors.userId.message}</>}
+            </div>
+            <div className="w-full md:w-1/2 px-1">
+              <Controller
                 control={control}
                 name="countryId"
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -164,17 +189,23 @@ const Address = () => {
                     <Select
                       className="mt-1"
                       onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                        const countryId: number = parseInt(event.target.value)
-                        const country = data.find((k: any) => k.id === countryId)
-                        setCity(country?.city ?? [])
-                        onChange(event)
+                        const countryId: number = parseInt(event.target.value);
+                        const country = data.find(
+                          (k: any) => k.id === countryId
+                        );
+                        setCity(country?.city ?? []);
+                        onChange(event);
                       }}
                       onBlur={onBlur}
                       value={value}
                     >
                       <option value="">Ülke Seçiniz</option>
                       {data.map((k: any) => {
-                        return <option value={k.id} key={k.id}>{k.name}</option>
+                        return (
+                          <option value={k.id} key={k.id}>
+                            {k.name}
+                          </option>
+                        );
                       })}
                     </Select>
                   </>
@@ -183,7 +214,7 @@ const Address = () => {
               {errors.countryId && <>{errors.countryId.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-            <Controller
+              <Controller
                 control={control}
                 name="cityId"
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -191,17 +222,23 @@ const Address = () => {
                     <Select
                       className="mt-1"
                       onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                        const cityId: number = parseInt(event.target.value)
-                        const selectedCity = city?.find((k: any) => k.id === cityId)
-                        setDistrict(selectedCity?.district ?? [])
-                        onChange(event)
+                        const cityId: number = parseInt(event.target.value);
+                        const selectedCity = city?.find(
+                          (k: any) => k.id === cityId
+                        );
+                        setDistrict(selectedCity?.district ?? []);
+                        onChange(event);
                       }}
                       onBlur={onBlur}
                       value={value}
                     >
                       <option value="">Şehir Seçiniz</option>
-                      {city?.map((k:any)=> {
-                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      {city?.map((k: any) => {
+                        return (
+                          <option value={k.id} key={k.id}>
+                            {k.name}
+                          </option>
+                        );
                       })}
                     </Select>
                   </>
@@ -210,7 +247,7 @@ const Address = () => {
               {errors.cityId && <>{errors.cityId.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-            <Controller
+              <Controller
                 control={control}
                 name="districtId"
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -218,26 +255,32 @@ const Address = () => {
                     <Select
                       className="mt-1"
                       onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-                        const districtId: number = parseInt(event.target.value)
-                        const selectedDistrict = district?.find((k: any) => k.id === districtId)
-                        setTown(selectedDistrict?.town ?? [])
-                        onChange(event)
+                        const districtId: number = parseInt(event.target.value);
+                        const selectedDistrict = district?.find(
+                          (k: any) => k.id === districtId
+                        );
+                        setTown(selectedDistrict?.town ?? []);
+                        onChange(event);
                       }}
                       onBlur={onBlur}
                       value={value}
                     >
                       <option value="">İlçe Seçiniz</option>
-                      {district?.map((k:any)=> {
-                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      {district?.map((k: any) => {
+                        return (
+                          <option value={k.id} key={k.id}>
+                            {k.name}
+                          </option>
+                        );
                       })}
                     </Select>
                   </>
                 )}
               />
-              {errors.addressType && <>{errors.addressType.message}</>}
+              {errors.districtId && <>{errors.districtId.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-            <Controller
+              <Controller
                 control={control}
                 name="townId"
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -249,35 +292,18 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Mahalle Seçiniz</option>
-                      {town?.map((k:any)=> {
-                        return <option value={k.id} key={k.id}>{k.name}</option>
+                      {town?.map((k: any) => {
+                        return (
+                          <option value={k.id} key={k.id}>
+                            {k.name}
+                          </option>
+                        );
                       })}
                     </Select>
                   </>
                 )}
               />
-              {errors.addressType && <>{errors.addressType.message}</>}
-            </div>
-            <div className="w-full md:w-1/2 px-1">
-            <Controller
-                control={control}
-                name="addressType"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <>
-                    <Select
-                      className="mt-1"
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    >
-                      <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>{addressType.HOME}</option>
-                      <option value={addressType.JOB}>{addressType.JOB}</option>
-                    </Select>
-                  </>
-                )}
-              />
-              {errors.addressType && <>{errors.addressType.message}</>}
+              {errors.townId && <>{errors.townId.message}</>}
             </div>
           </div>
           <div className="text-center">
