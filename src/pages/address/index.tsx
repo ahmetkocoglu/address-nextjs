@@ -24,6 +24,7 @@ type FormValues = {
 };
 
 const addressFormSchema = yup.object().shape({
+  addressType: yup.string().required("Lütfen adress tipi satırını seçiniz"),
   addressLine: yup.string().required("Lütfen adress satırını giriniz"),
   street: yup.string().required("Lütfen street satırını giriniz"),
   post_code: yup.string().required("Lütfen posta kodu satırını giriniz"),
@@ -86,14 +87,13 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Adres Tipi</option>
-                      <option value={addressType.HOME}>
-                        {addressType.HOME}
-                      </option>
+                      <option value={addressType.HOME}>{addressType.HOME}</option>
                       <option value={addressType.JOB}>{addressType.JOB}</option>
                     </Select>
                   </>
                 )}
               />
+              {errors.addressType && <>{errors.addressType.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
               <Input
@@ -136,30 +136,109 @@ const Address = () => {
               {errors.location && <>{errors.location.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <select className="w-full">
-                <option>Kişi Seçiniz</option>
-              </select>
+            <Controller
+                control={control}
+                name="addressType"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Adres Tipi</option>
+                      <option value={addressType.HOME}>{addressType.HOME}</option>
+                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.addressType && <>{errors.addressType.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-              {" "}
-              <select className="w-full">
-                <option>Ülke Seçiniz</option>
-              </select>
+            <Controller
+                control={control}
+                name="addressType"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Adres Tipi</option>
+                      <option value={addressType.HOME}>{addressType.HOME}</option>
+                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.addressType && <>{errors.addressType.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <select className="w-full">
-                <option>Şehir Seçiniz</option>
-              </select>
+            <Controller
+                control={control}
+                name="addressType"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Adres Tipi</option>
+                      <option value={addressType.HOME}>{addressType.HOME}</option>
+                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.addressType && <>{errors.addressType.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <select className="w-full">
-                <option>İlçe Seçiniz</option>
-              </select>
+            <Controller
+                control={control}
+                name="addressType"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Adres Tipi</option>
+                      <option value={addressType.HOME}>{addressType.HOME}</option>
+                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.addressType && <>{errors.addressType.message}</>}
             </div>
             <div className="w-full md:w-1/2 px-1">
-              <select className="w-full">
-                <option>Mahalle Seçiniz</option>
-              </select>
+            <Controller
+                control={control}
+                name="addressType"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <>
+                    <Select
+                      className="mt-1"
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    >
+                      <option value="">Adres Tipi</option>
+                      <option value={addressType.HOME}>{addressType.HOME}</option>
+                      <option value={addressType.JOB}>{addressType.JOB}</option>
+                    </Select>
+                  </>
+                )}
+              />
+              {errors.addressType && <>{errors.addressType.message}</>}
             </div>
           </div>
           <div className="text-center">
