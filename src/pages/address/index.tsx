@@ -7,6 +7,7 @@ import Select from "@/components/select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { getCountry } from "@/store/apps/country";
+import { setAddress } from "@/store/apps/address";
 
 enum addressType {
   JOB = "iş",
@@ -82,7 +83,7 @@ const Address = () => {
   });
 
   const onSubmit = (payload: FormValues) => {
-    console.log(payload);
+    dispatch(setAddress(payload))
   };
 
   useEffect(() => {
