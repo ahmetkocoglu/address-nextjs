@@ -32,10 +32,11 @@ const addressFormSchema = yup.object().shape({
   street: yup.string().required("Lütfen street satırını giriniz"),
   post_code: yup.string().required("Lütfen posta kodu satırını giriniz"),
   location: yup.string().required("Lütfen konum satırını giriniz"),
-  countryId: yup.object().shape({
-    value: yup.string().required("Required"),
-    label: yup.number().required("Required"),
-  }),
+  userId: yup.number().required("Lütfen kişi seçiniz"),
+  countryId: yup.number().required("Lütfen ülke seçiniz"),
+  cityId: yup.number().required("Lütfen şehir seçiniz"),
+  districtId: yup.number().required("Lütfen ilçe seçiniz"),
+  townId: yup.number().required("Lütfen mahalle seçiniz")
 });
 
 const defaultValues: FormValues = {
@@ -53,17 +54,18 @@ const defaultValues: FormValues = {
 
 const Address = () => {
   // ** Redux
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>()
 
   // ** Selector
   const loading: boolean = useSelector(
     (state: RootState) => state.country.loading
   );
-  const data: any = useSelector((state: RootState) => state.country.data);
+  const data: any = useSelector((state: RootState) => state.country.data)
 
-  const [city, setCity] = useState<any[]>();
-  const [district, setDistrict] = useState<any[]>();
-  const [town, setTown] = useState<any[]>();
+  const [city, setCity] = useState<any[]>()
+  const [district, setDistrict] = useState<any[]>()
+  const [town, setTown] = useState<any[]>()
+  const [location, setLocation] = useState('')
 
   useEffect(() => {
     dispatch(getCountry());
@@ -79,13 +81,22 @@ const Address = () => {
     resolver: yupResolver(addressFormSchema),
   });
 
-  const onSubmit = ({ addressType, addressLine }: FormValues) => {
-    console.log(addressType, addressLine);
+  const onSubmit = (payload: FormValues) => {
+    console.log(payload);
   };
 
   useEffect(() => {
     console.log(errors);
   }, [errors]);
+
+  useEffect(() => {
+    if('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(({ coords }) => {
+            const { latitude, longitude } = coords;
+            setLocation(`${latitude} ${longitude}`);
+        })
+    }
+}, []);
 
   return (
     <>
@@ -157,6 +168,7 @@ const Address = () => {
                 placeholder="Konum bilgisi"
                 className="mt-1"
                 rounded="rounded-2xl"
+                value={location}
                 {...register("location", { required: true })}
               />
               {errors.location && <>{errors.location.message}</>}
@@ -174,6 +186,7 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Kişi Seçiniz</option>
+                      <option value="1">Test User</option>
                     </Select>
                   </>
                 )}
