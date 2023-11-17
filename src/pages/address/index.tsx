@@ -324,7 +324,7 @@ const Address = () => {
           </div>
           <div className="text-center">
           {/* <button type="submit" disabled={addressLoading}>
-          {addressLoading ? <strong>"Loading..." </strong> : "Submit"}
+          {addressLoading ? <strong>Loading...</strong> : "Submit"}
           </button> */}
             {addressLoading ? (
               <><strong>Yükleniyor</strong></>
