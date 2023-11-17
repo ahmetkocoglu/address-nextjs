@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { getCountry } from "@/store/apps/country";
 import { setAddress } from "@/store/apps/address";
+import { getUser } from "@/store/apps/user";
 
 enum addressType {
   JOB = "iş",
@@ -59,6 +60,7 @@ const Address = () => {
 
   // ** Selector
   const data: any = useSelector((state: RootState) => state.country.data);
+  const userData: any = useSelector((state: RootState) => state.user.data);
   const addressLoading: boolean = useSelector(
     (state: RootState) => state.address.loading
   );
@@ -70,6 +72,7 @@ const Address = () => {
 
   useEffect(() => {
     dispatch(getCountry());
+    dispatch(getUser());
   }, [dispatch]);
 
   const {
@@ -189,7 +192,9 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Kişi Seçiniz</option>
-                      <option value="1">Test User</option>
+                      {userData?.map((k: any) => {
+                        return <option value={k.id} key={k.id}>{k. firstName} {k.lastName}</option>
+                      })}
                     </Select>
                   </>
                 )}
