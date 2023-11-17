@@ -37,7 +37,7 @@ const addressFormSchema = yup.object().shape({
   countryId: yup.number().required("Lütfen ülke seçiniz"),
   cityId: yup.number().required("Lütfen şehir seçiniz"),
   districtId: yup.number().required("Lütfen ilçe seçiniz"),
-  townId: yup.number().required("Lütfen mahalle seçiniz")
+  townId: yup.number().required("Lütfen mahalle seçiniz"),
 });
 
 const defaultValues: FormValues = {
@@ -55,18 +55,18 @@ const defaultValues: FormValues = {
 
 const Address = () => {
   // ** Redux
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
 
   // ** Selector
-  const loading: boolean = useSelector(
-    (state: RootState) => state.country.loading
+  const data: any = useSelector((state: RootState) => state.country.data);
+  const addressLoading: boolean = useSelector(
+    (state: RootState) => state.address.loading
   );
-  const data: any = useSelector((state: RootState) => state.country.data)
 
-  const [city, setCity] = useState<any[]>()
-  const [district, setDistrict] = useState<any[]>()
-  const [town, setTown] = useState<any[]>()
-  const [location, setLocation] = useState('')
+  const [city, setCity] = useState<any[]>();
+  const [district, setDistrict] = useState<any[]>();
+  const [town, setTown] = useState<any[]>();
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
     dispatch(getCountry());
@@ -76,6 +76,7 @@ const Address = () => {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues,
@@ -84,6 +85,7 @@ const Address = () => {
 
   const onSubmit = (payload: FormValues) => {
     dispatch(setAddress(payload))
+    reset(defaultValues)
   };
 
   useEffect(() => {
@@ -91,13 +93,13 @@ const Address = () => {
   }, [errors]);
 
   useEffect(() => {
-    if('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-            const { latitude, longitude } = coords;
-            setLocation(`${latitude} ${longitude}`);
-        })
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        const { latitude, longitude } = coords
+        setLocation(`${latitude} ${longitude}`)
+      });
     }
-}, []);
+  }, []);
 
   return (
     <>
@@ -321,7 +323,14 @@ const Address = () => {
             </div>
           </div>
           <div className="text-center">
-            <button type="submit">Gönder</button>
+          {/* <button type="submit" disabled={addressLoading}>
+          {addressLoading ? <strong>"Loading..." </strong> : "Submit"}
+          </button> */}
+            {addressLoading ? (
+              <><strong>Yükleniyor</strong></>
+            ) : (
+              <button type="submit">Gönder</button>
+            )}
           </div>
         </form>
       </div>
