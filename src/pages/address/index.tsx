@@ -59,21 +59,22 @@ const Address = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // ** Selector
-  const data: any = useSelector((state: RootState) => state.country.data);
-  const userData: any = useSelector((state: RootState) => state.user.data);
+  const countryData: any[] = useSelector((state: RootState) => state.country.data);
+  const userData: any[] = useSelector((state: RootState) => state.user.data);
   const addressLoading: boolean = useSelector(
     (state: RootState) => state.address.loading
+  );
+  const countryLoading: boolean = useSelector(
+    (state: RootState) => state.country.loading
+  );
+  const userLoading: boolean = useSelector(
+    (state: RootState) => state.user.loading
   );
 
   const [city, setCity] = useState<any[]>();
   const [district, setDistrict] = useState<any[]>();
   const [town, setTown] = useState<any[]>();
   const [location, setLocation] = useState("");
-
-  useEffect(() => {
-    dispatch(getCountry());
-    dispatch(getUser());
-  }, [dispatch]);
 
   const {
     register,
@@ -86,10 +87,10 @@ const Address = () => {
     resolver: yupResolver(addressFormSchema),
   });
 
-  const onSubmit = (payload: FormValues) => {
-    dispatch(setAddress(payload))
-    reset(defaultValues)
-  };
+  useEffect(() => {
+    dispatch(getCountry());
+    dispatch(getUser());
+  }, [dispatch]);
 
   useEffect(() => {
     console.log(errors);
@@ -98,11 +99,16 @@ const Address = () => {
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(({ coords }) => {
-        const { latitude, longitude } = coords
-        setLocation(`${latitude} ${longitude}`)
+        const { latitude, longitude } = coords;
+        setLocation(`${latitude} ${longitude}`);
       });
     }
   }, []);
+
+  const onSubmit = (payload: FormValues) => {
+    dispatch(setAddress(payload));
+    reset(defaultValues);
+  };
 
   return (
     <>
@@ -193,7 +199,11 @@ const Address = () => {
                     >
                       <option value="">Kişi Seçiniz</option>
                       {userData?.map((k: any) => {
-                        return <option value={k.id} key={k.id}>{k. firstName} {k.lastName}</option>
+                        return (
+                          <option value={k.id} key={k.id}>
+                            {k.firstName} {k.lastName}
+                          </option>
+                        );
                       })}
                     </Select>
                   </>
@@ -211,7 +221,7 @@ const Address = () => {
                       className="mt-1"
                       onChange={(event: ChangeEvent<HTMLSelectElement>) => {
                         const countryId: number = parseInt(event.target.value);
-                        const country = data.find(
+                        const country = countryData.find(
                           (k: any) => k.id === countryId
                         );
                         setCity(country?.city ?? []);
@@ -221,7 +231,7 @@ const Address = () => {
                       value={value}
                     >
                       <option value="">Ülke Seçiniz</option>
-                      {data.map((k: any) => {
+                      {countryData.map((k: any) => {
                         return (
                           <option value={k.id} key={k.id}>
                             {k.name}
@@ -328,11 +338,13 @@ const Address = () => {
             </div>
           </div>
           <div className="text-center">
-          {/* <button type="submit" disabled={addressLoading}>
+            {/* <button type="submit" disabled={addressLoading}>
           {addressLoading ? <strong>Loading...</strong> : "Submit"}
           </button> */}
             {addressLoading ? (
-              <><strong>Yükleniyor</strong></>
+              <>
+                <strong>Yükleniyor</strong>
+              </>
             ) : (
               <button type="submit">Gönder</button>
             )}
